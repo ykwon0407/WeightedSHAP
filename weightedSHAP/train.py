@@ -38,7 +38,7 @@ def create_boosting_model_to_explain(X_train, y_train, X_val, y_val, problem, ML
     d_train = lgb.Dataset(X_train, label=y_train)
     d_val = lgb.Dataset(X_val, label=y_val)
 
-    callbacks=[lgb.early_stopping(25)] # , lgb.log_evaluation(25)
+    callbacks=[lgb.early_stopping(25)] 
     model_to_explain=lgb.train(params, d_train, 
                               num_boost_round=1000,
                               valid_sets=[d_val], 
@@ -116,7 +116,6 @@ def create_model_to_explain(X_train, y_train, X_val, y_val, problem, ML_model):
     else:
         raise ValueError(f'Check ML_model: {ML_model}') 
 
-    # tr_err, val_err = check_overfitting(X_train, y_train, X_val, y_val, model_to_explain, problem, ML_model)
     elapsed_time_train=time()-start_time
     print(f'Elapsed time for training a model to explain: {elapsed_time_train:.2f} seconds')
     print('-'*30)
