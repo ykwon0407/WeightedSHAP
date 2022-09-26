@@ -1,6 +1,6 @@
 ## WeightedSHAP: analyzing and improving Shapley based feature attributions
 
-This repository provides an implementation of the paper WeightedSHAP: analyzing and improving Shapley based feature attributions accepted at [NeurIPS 2022](https://nips.cc/Conferences/2022). We show the suboptimality of SHAP and propose a new feature attribution method called WeightedSHAP. WeightedSHAP is a generalization of SHAP and is more effective to capture influential features. 
+This repository provides an implementation of the paper WeightedSHAP: analyzing and improving Shapley based feature attributions accepted at [NeurIPS 2022](https://nips.cc/Conferences/2022). We show the suboptimality of SHAP and propose **a new feature attribution method called WeightedSHAP**. WeightedSHAP is a generalization of SHAP and is more effective to capture influential features. 
 
 ### Quick start
 
@@ -11,17 +11,20 @@ We provide an easy-to-follow [Jupyter notebook](notebook/Example_fraud_inclusion
 <p align="center">
 <img src="./fig/2d-weightedshap.png" width="500">
 </p>
-&rarr; Illustrations of the suboptimality of Shapley-based feature attributions (SHAP) when $d=2$. **Shapley value fails to assign large attributions to more influential features**. 
+
+&rarr; Illustrations of the suboptimality of Shapley-based feature attributions (SHAP) when $d=2$. ***Shapley value fails to assign large attributions to more influential features***. 
 
 <p align="center">
 <img src="./fig/inclusion-weightedshap.png" width="800">
 </p>
-&rarr; Illustrations of the prediction recovery error curve and the Inclusion AUC curve as a function of the number of features added. **WeightedSHAP effectively assigns larger values for more influential features** and recovers the original prediction $\hat{f}(x)$ significantly faster than other state-of-the-art methods.
+
+&rarr; Illustrations of the prediction recovery error curve and the Inclusion AUC curve as a function of the number of features added.  ***WeightedSHAP effectively assigns larger values for more influential features*** and recovers the original prediction $\hat{f}(x)$ significantly faster than other state-of-the-art methods.
 
 <p align="center">
 <img src="./fig/mnist-weightedshap.png" width="800">
 </p>
-&rarr; WeightedSHAP can **identify more interpretable features**. In particular, SHAP fails to capture the last stroke of digit nine, which is a crucially important stroke to differentiate from the digit zero.
+
+&rarr; ***WeightedSHAP can identify more interpretable features***. In particular, SHAP fails to capture the last stroke of digit nine, which is a crucially important stroke to differentiate from the digit zero.
 
 ### Files
 
