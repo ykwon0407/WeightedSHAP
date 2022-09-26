@@ -15,13 +15,13 @@ We provide an easy-to-follow [Jupyter notebook](notebook/Example_fraud_inclusion
 &rarr; Illustrations of the suboptimality of Shapley-based feature attributions (SHAP) when $d=2$. ***Shapley value fails to assign large attributions to more influential features***. 
 
 <p align="center">
-<img src="./fig/inclusion-weightedshap.png" width="800">
+<img src="./fig/inclusion-weightedshap.png" width="750">
 </p>
 
 &rarr; Illustrations of the prediction recovery error curve and the Inclusion AUC curve as a function of the number of features added.  ***WeightedSHAP effectively assigns larger values for more influential features*** and recovers the original prediction $\hat{f}(x)$ significantly faster than other state-of-the-art methods.
 
 <p align="center">
-<img src="./fig/mnist-weightedshap.png" width="800">
+<img src="./fig/mnist-weightedshap.png" width="750">
 </p>
 
 &rarr; ***WeightedSHAP can identify more interpretable features***. In particular, SHAP fails to capture the last stroke of digit nine, which is a crucially important stroke to differentiate from the digit zero.
@@ -38,9 +38,9 @@ We provide an easy-to-follow [Jupyter notebook](notebook/Example_fraud_inclusion
 
 This repository highly depends on the following two repositories. 
 
-- Covert, I., Lundberg, S. M., & Lee, S. I. (2021). Explaining by Removing: A Unified Framework for Model Explanation. J. Mach. Learn. Res., 22, 209-1. [GitHub](https://github.com/iancovert/removal-explanations)
+- Covert, I., Lundberg, S. M., & Lee, S. I. (2021). Explaining by Removing: A Unified Framework for Model Explanation. J. Mach. Learn. Res., 22, 209-1. [[GitHub]](https://github.com/iancovert/removal-explanations)
 
-- Jethani, N., Sudarshan, M., Covert, I. C., Lee, S. I., & Ranganath, R. (2021, September). FastSHAP: Real-Time Shapley Value Estimation. In International Conference on Learning Representations. [GitHub](https://github.com/iancovert/fastshap/tree/main/fastshap)
+- Jethani, N., Sudarshan, M., Covert, I. C., Lee, S. I., & Ranganath, R. (2021, September). FastSHAP: Real-Time Shapley Value Estimation. In International Conference on Learning Representations. [[GitHub]](https://github.com/iancovert/fastshap/tree/main/fastshap)
 
 ### Authors
 
