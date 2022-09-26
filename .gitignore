@@ -3,6 +3,5 @@ __pycache__
 .DS_Store
 .ipynb_checkpoints
 /*.ipynb
-*.pkl
 *.pt
 clf_path
