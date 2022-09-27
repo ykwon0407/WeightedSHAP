@@ -12,7 +12,7 @@ We provide an easy-to-follow [Jupyter notebook](notebook/Example_fraud_inclusion
 <img src="./fig/2d-weightedshap.png" width="500">
 </p>
 
-&rarr; Illustrations of the suboptimality of Shapley-based feature attributions (SHAP) when $d=2$. ***Shapley value fails to assign large attributions to more influential features***. 
+&rarr; Illustrations of the suboptimality of Shapley-based feature attributions (SHAP) when $d=2$. ***Shapley value fails to assign large attributions to more influential features*** on grey area. 
 
 <p align="center">
 <img src="./fig/inclusion-weightedshap.png" width="750">
