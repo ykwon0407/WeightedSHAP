@@ -87,6 +87,7 @@ def run_attribution_core(problem, ML_model,
     '''
     pred_list, pred_masking = [], []
     cond_pred_keep_absolute, cond_pred_remove_absolute=[], []
+    value_list=[]
     n_max=min(n_max, len(X_test))
     for ind in tqdm(range(n_max)):
         # Store original prediction 
@@ -100,6 +101,7 @@ def run_attribution_core(problem, ML_model,
         
         # Optimize weight for WeightedSHAP (When AUP is used)
         attribution_dict_all=utils.compute_beta_dict_from_MC(MC_est, beta_hyper_list)
+        value_list.append(attribution_dict_all)
         cond_pred_keep_absolute_list=utils.compute_cond_pred_list(attribution_dict_all, conditional_game)
         AUP_list=np.sum(np.abs(np.array(cond_pred_keep_absolute_list)- original_pred), axis=1)
         WeightedSHAP_index=np.argmin(AUP_list)
@@ -121,7 +123,8 @@ def run_attribution_core(problem, ML_model,
 
     exp_dict=dict()
     exp_dict['true_list']=np.array(y_test)[:n_max]
-    exp_dict['pred_list']=np.array(pred_list)   
+    exp_dict['pred_list']=np.array(pred_list)  
+    exp_dict['value_list']=value_list
     exp_dict['cond_pred_keep_absolute']=np.array(cond_pred_keep_absolute)   
     exp_dict['cond_pred_remove_absolute']=np.array(cond_pred_remove_absolute)   
     exp_dict['pred_masking']=np.array(pred_masking)
