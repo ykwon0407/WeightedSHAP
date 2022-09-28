@@ -4,8 +4,8 @@ import torch
 import torch.nn as nn
 from scipy.stats import ttest_ind
 
-from third_party import removal, surrogate
-from third_party.utils import MaskLayer1d, KLDivLoss, MSELoss
+from .third_party import removal, surrogate
+from .third_party.utils import MaskLayer1d, KLDivLoss, MSELoss
 
 def create_boosting_model_to_explain(X_train, y_train, X_val, y_val, problem, ML_model):    
     print('Train a model to explain: Boosting')

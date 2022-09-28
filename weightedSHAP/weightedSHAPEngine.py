@@ -2,8 +2,8 @@ from tqdm import tqdm
 import numpy as np
 
 # custom modules
-import data, utils
-from third_party import behavior
+from . import data, utils
+from .third_party import behavior
 
 beta_hyper_list=[(-1,'LOO-First'), (1,32), (1,16), (1, 8), (1, 4), (1, 2), 
                     (1,1), (2,1), (4,1), (8, 1), (16, 1), (32,1), (-1,'LOO-Last')]
@@ -81,13 +81,13 @@ def MarginalContributionValue(game, thresh=1.005, batch_size=1, n_check_period=1
 
 def run_attribution_core(problem, ML_model, 
                         model_to_explain, conditional_extension, 
-                        X_train, y_train, X_val, y_val, X_test, y_test):
+                        X_train, y_train, X_val, y_val, X_test, y_test, n_max=100):
     '''
     Compute attribution values and evaluate its performance
     '''
     pred_list, pred_masking = [], []
     cond_pred_keep_absolute, cond_pred_remove_absolute=[], []
-    n_max=min(100, len(X_test))
+    n_max=min(n_max, len(X_test))
     for ind in tqdm(range(n_max)):
         # Store original prediction 
         original_pred=utils.compute_predict(model_to_explain, X_test[ind,:].reshape(1,-1), problem, ML_model)

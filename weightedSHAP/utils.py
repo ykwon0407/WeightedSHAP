@@ -1,6 +1,6 @@
 import os, sys, inspect, pickle
 import numpy as np
-import train
+from . import train
 
 def crossentropyloss(pred, target):
     '''Cross entropy loss that does not average across samples.'''
