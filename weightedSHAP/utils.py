@@ -1,6 +1,6 @@
 import os, sys, inspect, pickle
 import numpy as np
-from . import train
+from weightedSHAP import train
 
 def crossentropyloss(pred, target):
     '''Cross entropy loss that does not average across samples.'''
@@ -44,10 +44,14 @@ def compute_weight_list(m, alpha=1, beta=1):
         weight_list[j]=normalizing_constant*weight_list[j] # we need this '/m' but omit for stability # normalizing
     return weight_list/np.sum(weight_list)
 
-def compute_beta_dict_from_MC(marginal_contrib, beta_hyperparameter_list):
-    beta_dict={}
+def compute_semivalue_from_MC(marginal_contrib, semivalue_list):
+    '''
+    With the marginal contribution values, it computes semivalues
+
+    '''
+    semivalue_dict={}
     n_elements=marginal_contrib.shape[0]
-    for weight in beta_hyperparameter_list:
+    for weight in semivalue_list:
         alpha, beta=weight
         if alpha > 0:
             model_name=f'Beta({beta},{alpha})'
@@ -63,12 +67,12 @@ def compute_beta_dict_from_MC(marginal_contrib, beta_hyperparameter_list):
                 weight_list[-1]=1
         
         if len(marginal_contrib.shape) == 2:
-            beta_shap=np.einsum('ij,j->i', marginal_contrib, weight_list)
+            semivalue_tmp=np.einsum('ij,j->i', marginal_contrib, weight_list)
         else:
             # classification case
-            beta_shap=np.einsum('ijk,j->ik', marginal_contrib, weight_list)
-        beta_dict[model_name]=beta_shap
-    return beta_dict
+            semivalue_tmp=np.einsum('ijk,j->ik', marginal_contrib, weight_list)
+        semivalue_dict[model_name]=semivalue_tmp
+    return semivalue_dict
 
 def check_convergence(mem, n_require=100):
     """
@@ -171,16 +175,3 @@ def compute_predict(model_to_explain, x, problem, ML_model):
     else:
         return float(model_to_explain.predict(x))    
 
-def compute_corr_stat(X, random_factor=1):
-    gram_mat=X.T.dot(X)/len(X)
-    p=gram_mat.shape[0]
-    diag_element=np.diag(gram_mat)
-    n_main_features=p//(random_factor+1)
-    n_random_features=p-n_main_features
-    
-    top_corr=(np.sum(gram_mat[:n_main_features, :n_main_features])-np.sum(diag_element[:n_main_features]))/(n_main_features*(n_main_features-1))
-    bottom_corr=(np.sum(gram_mat[n_main_features:, n_main_features:])-np.sum(diag_element[n_main_features:]))/(n_random_features*(n_random_features-1))
-    print(f'Main corr: {top_corr:.4f}')
-    print(f'Random corr: {bottom_corr:.4f}')
-
-    return [top_corr, bottom_corr]

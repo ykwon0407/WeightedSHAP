@@ -5,29 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_boston
 from sklearn.preprocessing import StandardScaler
 
-def extend_dataset(X, d_to_add, verbose=False):
-    n, d_prev = X.shape
-    rho=(np.sum((X.T.dot(X)/n)[:d_prev,:d_prev])-d_prev)/(d_prev*(d_prev-1))
-
-    if -1/(4*(d_prev-1)+1e-16) > rho:
-        if verbose is True:
-            # if rho is too small, the sigma_square defined below can be negative
-            print(f'Initial rho: {rho:.4f}')
-            rho=max(-1/(4*(d_prev-1)+1e-16), rho)
-            print(f'After fixing rho: {rho:.4f}')
-    else:
-        if verbose is True:
-            print(f'Rho: {rho:.4f}')
-    
-    for _ in range(d_to_add):
-        sigma_square=1-(rho**2)*(d_prev)/(1+rho*(d_prev-1)+1e-16)
-        new_X = (rho/(1+rho*(d_prev-1)+1e-16))*X.dot(np.ones((d_prev,1)))
-        new_X += np.random.normal(size=(n,1))*np.sqrt(sigma_square)
-        X = np.concatenate((X, new_X), axis=1)
-        d_prev += 1
-    return X
-
-def load_data(problem, dataset, random_factor=2, random_seed=2022):
+def load_data(problem, dataset, dir_path, random_factor=2, random_seed=2022):
     '''
     Load a dataset
     We split datasets as Train:Val:Est:Test=7:1:1:1
@@ -41,9 +19,9 @@ def load_data(problem, dataset, random_factor=2, random_seed=2022):
     print('-'*30)
     
     if problem=='regression':
-        (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)=load_regression_dataset(dataset=dataset, rid=random_seed)
+        (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)=load_regression_dataset(dataset=dataset, dir_path=dir_path, rid=random_seed)
     elif problem=='classification':
-        (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)=load_classification_dataset(dataset=dataset, rid=random_seed)
+        (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)=load_classification_dataset(dataset=dataset, dir_path=dir_path, rid=random_seed)
     else:
         raise NotImplementedError('Check problem')
 
@@ -69,12 +47,12 @@ def load_data(problem, dataset, random_factor=2, random_seed=2022):
 
     return (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)
 
-def load_regression_dataset(dataset='abalone', reg_path='reg_path', rid=1):
+def load_regression_dataset(dataset='abalone', dir_path='dir_path', rid=1):
     '''
     This function loads regression datasets.
-    reg_path: path to regression datasets.
+    dir_path: path to regression datasets.
 
-    You may need to download datasets first. Make sure to store in 'reg_path'.
+    You may need to download datasets first. Make sure to store in 'dir_path'.
     The datasets are avaiable at the following links.
     abalone: https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/
     airfoil: https://archive.ics.uci.edu/ml/machine-learning-databases/00291/
@@ -92,21 +70,21 @@ def load_regression_dataset(dataset='abalone', reg_path='reg_path', rid=1):
         print('-'*50)
         print('Abalone')
         print('-'*50)
-        raw_data = pd.read_csv(reg_path+"/abalone.data", header=None)
+        raw_data = pd.read_csv(dir_path+"/abalone.data", header=None)
         raw_data.dropna(inplace=True)
         X, y = pd.get_dummies(raw_data.iloc[:,:-1],drop_first=True).values, raw_data.iloc[:,-1].values
     elif dataset == 'whitewine':
         print('-'*50)
         print('whitewine')
         print('-'*50)
-        raw_data = pd.read_csv(reg_path+"/winequality-white.csv",delimiter=";")
+        raw_data = pd.read_csv(dir_path+"/winequality-white.csv",delimiter=";")
         raw_data.dropna(inplace=True)
         X, y = raw_data.values[:,:-1], raw_data.values[:,-1]
     elif dataset == 'airfoil':
         print('-'*50)
         print('airfoil')
         print('-'*50)
-        raw_data = pd.read_csv(reg_path+"/airfoil_self_noise.dat", sep='\t', names=['X1','X2,','X3','X4','X5','Y'])
+        raw_data = pd.read_csv(dir_path+"/airfoil_self_noise.dat", sep='\t', names=['X1','X2,','X3','X4','X5','Y'])
         X, y = raw_data.values[:,:-1], raw_data.values[:,-1]
     else:
         raise NotImplementedError(f'Check {dataset}')
@@ -118,10 +96,10 @@ def load_regression_dataset(dataset='abalone', reg_path='reg_path', rid=1):
 
     return (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)
     
-def load_classification_dataset(dataset='gaussian', clf_path='../notebook', rid=1):
+def load_classification_dataset(dataset='gaussian', dir_path='dir_path', rid=1):
     '''
     This function loads classification datasets.
-    clf_path: path to classification datasets.
+    dir_path: path to classification datasets.
     '''
     np.random.seed(rid)
     
@@ -141,7 +119,7 @@ def load_classification_dataset(dataset='gaussian', clf_path='../notebook', rid=
         print('-'*50)
         print('Fraud Detection')
         print('-'*50)
-        data_dict=pickle.load(open('../notebook/fraud_dataset.pkl', 'rb'))
+        data_dict=pickle.load(open(f'{dir_path}/fraud_dataset.pkl', 'rb'))
         data, target = data_dict['X_num'], data_dict['y'] 
         target = (target == 1) + 0.0
         target = target.astype(np.int32)
@@ -155,6 +133,33 @@ def load_classification_dataset(dataset='gaussian', clf_path='../notebook', rid=
     X_train, X_est, y_train, y_est=train_test_split(X_train, y_train, test_size=float(1/8))
 
     return (X_train, y_train), (X_val, y_val), (X_est, y_est), (X_test, y_test)
+
+
+'''
+Data utils
+'''
+
+def extend_dataset(X, d_to_add, verbose=False):
+    n, d_prev = X.shape
+    rho=(np.sum((X.T.dot(X)/n)[:d_prev,:d_prev])-d_prev)/(d_prev*(d_prev-1))
+
+    if -1/(4*(d_prev-1)+1e-16) > rho:
+        if verbose is True:
+            # if rho is too small, the sigma_square defined below can be negative
+            print(f'Initial rho: {rho:.4f}')
+            rho=max(-1/(4*(d_prev-1)+1e-16), rho)
+            print(f'After fixing rho: {rho:.4f}')
+    else:
+        if verbose is True:
+            print(f'Rho: {rho:.4f}')
+    
+    for _ in range(d_to_add):
+        sigma_square=1-(rho**2)*(d_prev)/(1+rho*(d_prev-1)+1e-16)
+        new_X = (rho/(1+rho*(d_prev-1)+1e-16))*X.dot(np.ones((d_prev,1)))
+        new_X += np.random.normal(size=(n,1))*np.sqrt(sigma_square)
+        X = np.concatenate((X, new_X), axis=1)
+        d_prev += 1
+    return X
 
 def make_balance_sample(data, target):
     p = np.mean(target)
