@@ -11,7 +11,7 @@ attribution_list=['LOO-First', 'Beta(32,1)', 'Beta(16,1)', 'Beta(8,1)',
                  'Beta(4,1)', 'Beta(2,1)', 'Beta(1,1)', 'Beta(1,2)',
                  'Beta(1,4)', 'Beta(1,8)', 'Beta(1,16)', 'Beta(1,32)', 'LOO-Last']
 
-def MarginalContributionValue(game, thresh=1.05, batch_size=1, n_check_period=100):
+def MarginalContributionValue(game, thresh=1.005, batch_size=1, n_check_period=100):
     '''Calculate feature attributions using the marginal contributions.'''
 
     # index of the added feature, cardinality of set
@@ -107,6 +107,7 @@ def compute_attributions(problem, ML_model,
     exp_dict['value_list']=value_list
     exp_dict['true_list']=np.array(y_test)[:n_max]
     exp_dict['pred_list']=np.array(pred_list)  
+    exp_dict['input_list']=np.array(X_test)[:n_max]  
     exp_dict['cond_pred_keep_absolute']=np.array(cond_pred_keep_absolute)   
 
     return exp_dict

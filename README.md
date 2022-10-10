@@ -1,6 +1,6 @@
 # WeightedSHAP: analyzing and improving Shapley based feature attributions
 
-This repository provides an implementation of the paper *[WeightedSHAP: analyzing and improving Shapley based feature attributions](https://arxiv.org/abs/2209.13429)* accepted at [NeurIPS 2022](https://nips.cc/Conferences/2022). We show the suboptimality of SHAP and propose **a new feature attribution method called WeightedSHAP**. WeightedSHAP is a generalization of SHAP and is more effective to capture influential features. ***As of Oct. 5th, it is still under development to make it easier to use. This improvement will be done before NeurIPS conference.***
+This repository provides an implementation of the paper *[WeightedSHAP: analyzing and improving Shapley based feature attributions](https://arxiv.org/abs/2209.13429)* accepted at [NeurIPS 2022](https://nips.cc/Conferences/2022). We show the suboptimality of SHAP and propose **a new feature attribution method called WeightedSHAP**. WeightedSHAP is a generalization of SHAP and is more effective to capture influential features. 
 
 ### Quick start
 
@@ -26,13 +26,6 @@ We provide an easy-to-follow [Jupyter notebook](notebook/Example_fraud_inclusion
 
 &rarr; ***WeightedSHAP can identify more interpretable features***. In particular, SHAP fails to capture the last stroke of digit nine, which is a crucially important stroke to differentiate from the digit zero.
 
-### Files
-
-`weightedSHAP/weightedSHAPEngine.py`: the main file for computing WeightedSHAP. The default implementation 
-
-`weightedSHAP/train.py`: trains a baseline model to explain and a surrogate model.
-
-`weightedSHAP/data.py`: handles loading and preprocessing datasets.
 
 ### References
 
