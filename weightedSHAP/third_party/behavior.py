@@ -44,6 +44,25 @@ class PredictionGame:
             output = output[0]
         return output
 
+def crossentropyloss(pred, target):
+    '''Cross entropy loss that does not average across samples.'''
+    if pred.ndim == 1:
+        pred = pred[:, np.newaxis]
+        pred = np.concatenate((1 - pred, pred), axis=1)
+
+    if pred.shape == target.shape:
+        # Soft cross entropy loss.
+        pred = np.clip(pred, a_min=1e-12, a_max=1-1e-12)
+        return - np.sum(np.log(pred) * target, axis=1)
+    else:
+        # Standard cross entropy loss.
+        return - np.log(pred[np.arange(len(pred)), target])
+
+
+def mseloss(pred, target):
+    '''MSE loss that does not average across samples.'''
+    return np.sum((pred - target) ** 2, axis=1)
+
 class PredictionLossGame:
     '''
     Cooperative game for an individual example's loss value.
@@ -53,7 +72,7 @@ class PredictionLossGame:
       label: the input's true label.
       loss: loss function (see utils.py).
     '''
-    def __init__(self, extension, sample, label, loss):
+    def __init__(self, extension, sample, label, loss=mseloss):
         # Add batch dimension to sample.
         if sample.ndim == 1:
             sample = sample[np.newaxis]
@@ -63,7 +82,7 @@ class PredictionLossGame:
             label = np.array([label])
 
         # Convert label dtype if necessary.
-        if loss is utils.crossentropyloss:
+        if loss is crossentropyloss:
             # Make sure not soft cross entropy.
             if (label.ndim <= 1) or (label.shape[1] == 1):
                 # Only convert if float.
@@ -116,7 +135,7 @@ class DatasetLossGame:
     '''
     def __init__(self, extension, data, labels, loss):
         # Convert labels dtype if necessary.
-        if loss is utils.crossentropyloss:
+        if loss is crossentropyloss:
             # Make sure not soft cross entropy.
             if (labels.ndim == 1) or (labels.shape[1] == 1):
                 # Only convert if float.
